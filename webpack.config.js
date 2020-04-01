@@ -18,6 +18,10 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/
       }
+      // {
+      //   test: /\.(woff|woff2|eot|ttf|svg)$/,
+      //   loader: "file-loader?name=fonts/[name].[ext]"
+      // }
     ]
   },
   plugins: [
