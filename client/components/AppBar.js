@@ -1,54 +1,46 @@
 import React from "react";
+import { graphql } from "react-apollo";
+
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import IconButton from "@material-ui/core/IconButton";
-import AccountCircle from "@material-ui/icons/AccountCircle";
-import MenuItem from "@material-ui/core/MenuItem";
-import Menu from "@material-ui/core/Menu";
+import Button from "@material-ui/core/Button";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
-const styles = {
+import query from "../queries/CurrentUser";
+import mutation from "../mutations/Logout";
+
+const styles = theme => ({
   root: {
     flexGrow: 1
   },
   grow: {
     flexGrow: 1
   },
-  menuButton: {
-    marginLeft: -12,
-    marginRight: 20
+  progress: {
+    color: "white",
+    marginRight: theme.spacing(1)
   }
-};
+});
 
 class MenuAppBar extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      auth: true,
-      anchorEl: null
-    };
+    this.state = {};
   }
 
-  handleChange(event) {
-    this.setState({ auth: event.target.checked });
-  }
-
-  handleMenu(event) {
-    this.setState({ anchorEl: event.currentTarget });
-  }
-
-  handleClose() {
-    this.setState({ anchorEl: null });
-  }
+  onLogout = () => {
+    this.props.mutate({
+      refetchQueries: [{ query }]
+    });
+  };
 
   render() {
-    const { classes } = this.props;
-    const { auth, anchorEl } = this.state;
-    const open = Boolean(anchorEl);
-
+    const { classes, history } = this.props;
+    const { loading, user } = this.props.data;
     return (
       <div className={classes.root}>
         <AppBar position="static">
@@ -56,50 +48,29 @@ class MenuAppBar extends React.Component {
             <Typography variant="h6" color="inherit" className={classes.grow}>
               Todo
             </Typography>
-            <div>
-              <IconButton
-                aria-owns="menu-appbar"
-                aria-haspopup="true"
-                onClick={e => this.handleMenu(e)}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right"
-                }}
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right"
-                }}
-                open={open}
-                onClose={e => this.handleClose(e)}
-              >
-                {auth ? (
-                  <div>
-                    <MenuItem onClick={e => this.handleClose(e)}>
-                      Profile
-                    </MenuItem>
-                    <MenuItem onClick={e => this.handleClose(e)}>
-                      Logout
-                    </MenuItem>
-                  </div>
+            {loading ? (
+              <CircularProgress size="30" className={classes.progress} />
+            ) : (
+              <div>
+                {user ? (
+                  <Button color="inherit" onClick={() => this.onLogout()}>
+                    Logout
+                  </Button>
                 ) : (
                   <div>
-                    <MenuItem onClick={e => this.handleClose(e)}>
+                    <Button color="inherit" onClick={e => this.handleClose(e)}>
                       Signup
-                    </MenuItem>
-                    <MenuItem onClick={e => this.handleClose(e)}>
+                    </Button>
+                    <Button
+                      color="inherit"
+                      onClick={() => history.push("/login")}
+                    >
                       Login
-                    </MenuItem>
+                    </Button>
                   </div>
                 )}
-              </Menu>
-            </div>
+              </div>
+            )}
           </Toolbar>
         </AppBar>
       </div>
@@ -111,4 +82,6 @@ MenuAppBar.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(MenuAppBar);
+export default graphql(mutation)(
+  graphql(query)(withStyles(styles)(MenuAppBar))
+);

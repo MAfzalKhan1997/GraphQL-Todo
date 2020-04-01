@@ -5,9 +5,9 @@ import Routes from "./Routes";
 
 const Root = () => {
   return (
-    <div>
+    <>
       <Routes />
-    </div>
+    </>
   );
 };
 
