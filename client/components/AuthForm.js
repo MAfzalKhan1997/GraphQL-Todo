@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
@@ -11,11 +10,6 @@ import TextField from "@material-ui/core/TextField";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
 
 const styles = theme => ({
   root: {
@@ -46,50 +40,12 @@ class AuthForm extends Component {
       confirmPassword: "",
 
       showPassword: false,
-      // correct: true,
-      openDialog: false,
-      openPassDialog: false,
       errors: []
-      // errorMessage: ""
     };
   }
 
-  // componentDidMount() {
-  //   const openDialog = !!this.props.location.state;
-  //   this.setState({
-  //     openDialog
-  //   });
-  // }
-
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    this.setState({
-      errors: nextProps.errors
-    });
-  }
-
-  renderDialog() {
-    return (
-      <Dialog
-        open={this.state.openDialog}
-        onClose={() => this.handleDialog(false)}
-      >
-        <DialogTitle>Registration</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            You are successfully registered, Please SignIn to continue.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => this.handleDialog(false)} color="primary">
-            OK
-          </Button>
-        </DialogActions>
-      </Dialog>
-    );
-  }
-
-  handleDialog(value) {
-    this.setState({ openDialog: value });
+  static getDerivedStateFromProps(nextProps, prevState) {
+    return { errors: nextProps.errors };
   }
 
   EmailField = () => {
@@ -235,7 +191,6 @@ class AuthForm extends Component {
             <SwitchForm />
           </Paper>
         </div>
-        {this.renderDialog()}
       </div>
     );
   }

@@ -18,7 +18,6 @@ class SignInPage extends Component {
   }
 
   UNSAFE_componentWillUpdate(nextProps, nextState) {
-    console.log(this.props, nextProps);
     if (!this.props.data.user && nextProps.data.user) {
       this.props.history.push("/dashboard");
     }

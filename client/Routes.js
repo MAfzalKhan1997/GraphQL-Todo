@@ -11,6 +11,9 @@ import SignInPage from "./containers/SignInPage";
 import SignUpPage from "./containers/SignUpPage";
 import Dashboard from "./containers/Dashboard";
 
+import requireAuth from "./components/requireAuth";
+// import requireNoAuth from "./components/requireNoAuth";
+
 const cache = new InMemoryCache();
 const link = new HttpLink({
   uri: "http://localhost:4000/graphql"
@@ -30,7 +33,7 @@ const Routes = () => (
           <Route exact path="/" component={Home} />
           <Route path="/login" component={SignInPage} />
           <Route path="/signup" component={SignUpPage} />
-          <Route path="/dashboard" component={Dashboard} />
+          <Route path="/dashboard" component={requireAuth(Dashboard)} />
         </Switch>
       </App>
     </Router>
