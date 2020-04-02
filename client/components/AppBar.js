@@ -58,7 +58,10 @@ class MenuAppBar extends React.Component {
                   </Button>
                 ) : (
                   <div>
-                    <Button color="inherit" onClick={e => this.handleClose(e)}>
+                    <Button
+                      color="inherit"
+                      onClick={() => history.push("/signup")}
+                    >
                       Signup
                     </Button>
                     <Button

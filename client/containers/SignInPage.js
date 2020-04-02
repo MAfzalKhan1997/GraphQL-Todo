@@ -1,10 +1,12 @@
 import React, { Component } from "react";
+import { graphql } from "react-apollo";
+import { Link } from "react-router-dom";
+import Typography from "@material-ui/core/Typography";
 
 import mutation from "../mutations/Login";
 import query from "../queries/CurrentUser";
 
 import AuthForm from "../components/AuthForm";
-import { graphql } from "react-apollo";
 
 class SignInPage extends Component {
   constructor(props) {
@@ -13,8 +15,11 @@ class SignInPage extends Component {
     this.state = {};
   }
 
-  componentWillUpdate(nextProps, nextState) {
+  UNSAFE_componentWillUpdate(nextProps, nextState) {
     console.log(this.props, nextProps);
+    if (!this.props.data.user && nextProps.data.user) {
+      this.props.history.push("/dashboard");
+    }
   }
 
   onSubmit = (email, password) => {
@@ -33,10 +38,16 @@ class SignInPage extends Component {
         <AuthForm
           formName="LOGIN"
           onSubmit={(email, password) => this.onSubmit(email, password)}
+          SwitchForm={SwitchForm}
         />
       </div>
     );
   }
 }
 
+const SwitchForm = () => (
+  <Typography align="center" variant="subtitle2">
+    {`Don't have an account ?`} <Link to="/signup"> Sign Up</Link>
+  </Typography>
+);
 export default graphql(query)(graphql(mutation)(SignInPage));

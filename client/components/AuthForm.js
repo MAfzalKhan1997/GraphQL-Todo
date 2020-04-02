@@ -186,10 +186,8 @@ class AuthForm extends Component {
     this.setState(state => ({ showPassword: !state.showPassword }));
   };
 
-  signIn = () => {};
-
   render() {
-    const { classes, formName } = this.props;
+    const { classes, formName, SwitchForm } = this.props;
     const { email, password, confirmPassword } = this.state;
 
     return (
@@ -225,9 +223,7 @@ class AuthForm extends Component {
             <br />
             <br />
             <br />
-            <Typography align="center" variant="subtitle2">
-              {`Don't have an account ?`} <Link to="/signup"> Sign Up</Link>
-            </Typography>
+            <SwitchForm />
           </Paper>
         </div>
         {this.renderDialog()}

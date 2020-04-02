@@ -8,6 +8,7 @@ import { ApolloProvider } from "react-apollo";
 import App from "./containers/App";
 import Home from "./containers/Home";
 import SignInPage from "./containers/SignInPage";
+import SignUpPage from "./containers/SignUpPage";
 import Dashboard from "./containers/Dashboard";
 
 const cache = new InMemoryCache();
@@ -28,6 +29,7 @@ const Routes = () => (
         <Switch>
           <Route exact path="/" component={Home} />
           <Route path="/login" component={SignInPage} />
+          <Route path="/signup" component={SignUpPage} />
           <Route path="/dashboard" component={Dashboard} />
         </Switch>
       </App>
