@@ -12,7 +12,9 @@ class SignInPage extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      errors: []
+    };
   }
 
   UNSAFE_componentWillUpdate(nextProps, nextState) {
@@ -23,22 +25,31 @@ class SignInPage extends Component {
   }
 
   onSubmit = (email, password) => {
-    this.props.mutate({
-      variables: {
-        email,
-        password
-      },
-      refetchQueries: [{ query }]
-    });
+    this.props
+      .mutate({
+        variables: {
+          email,
+          password
+        },
+        refetchQueries: [{ query }]
+      })
+      .catch(res => {
+        const errors = res.graphQLErrors.map(err => err.message);
+        this.setState({
+          errors
+        });
+      });
   };
 
   render() {
+    const { errors } = this.state;
     return (
       <div>
         <AuthForm
           formName="LOGIN"
-          onSubmit={(email, password) => this.onSubmit(email, password)}
           SwitchForm={SwitchForm}
+          errors={errors}
+          onSubmit={(email, password) => this.onSubmit(email, password)}
         />
       </div>
     );

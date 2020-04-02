@@ -46,10 +46,11 @@ class AuthForm extends Component {
       confirmPassword: "",
 
       showPassword: false,
-      correct: true,
+      // correct: true,
       openDialog: false,
       openPassDialog: false,
-      errorMessage: ""
+      errors: []
+      // errorMessage: ""
     };
   }
 
@@ -59,6 +60,12 @@ class AuthForm extends Component {
   //     openDialog
   //   });
   // }
+
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    this.setState({
+      errors: nextProps.errors
+    });
+  }
 
   renderDialog() {
     return (
@@ -97,7 +104,7 @@ class AuthForm extends Component {
         variant="outlined"
         type="email"
         autoComplete="email"
-        onFocus={() => this.setState({ correct: true })}
+        onFocus={() => this.setState({ errors: [] })}
         onChange={this.handleChange("email")}
       />
     );
@@ -114,7 +121,7 @@ class AuthForm extends Component {
         margin="dense"
         variant="outlined"
         type={showPassword ? "text" : "password"}
-        onFocus={() => this.setState({ correct: true })}
+        onFocus={() => this.setState({ errors: [] })}
         onChange={this.handleChange("password")}
         InputProps={{
           endAdornment: (
@@ -143,7 +150,7 @@ class AuthForm extends Component {
         margin="dense"
         variant="outlined"
         type={showPassword ? "text" : "password"}
-        onFocus={() => this.setState({ correct: true })}
+        onFocus={() => this.setState({ errors: [] })}
         onChange={this.handleChange("confirmPassword")}
         InputProps={{
           endAdornment: (
@@ -162,11 +169,13 @@ class AuthForm extends Component {
   };
 
   ErrorMessage = () => {
-    const { correct, errorMessage } = this.state;
-    return !correct ? (
-      <Typography variant="subtitle2" color="secondary">
-        {errorMessage}
-      </Typography>
+    const { errors } = this.state;
+    return errors.length ? (
+      errors.map((err, index) => (
+        <Typography key={index} variant="subtitle2" color="secondary">
+          {err}
+        </Typography>
+      ))
     ) : (
       <Typography variant="subtitle2" color="secondary">
         <br />{" "}
@@ -207,7 +216,7 @@ class AuthForm extends Component {
             <Typography align="center" variant="h5">
               TODO GraphQL
             </Typography>
-            <div style={{ paddingTop: 30, paddingBottom: 5 }}>
+            <div style={{ paddingTop: 30, paddingBottom: 20 }}>
               {this.EmailField()}
               {this.PassField()}
               {this.ErrorMessage()}
